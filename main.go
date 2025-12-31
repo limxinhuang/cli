@@ -127,7 +127,7 @@ func deleteTodo(id int) {
 
 func main() {
 	if len(os.Args) < 2 {
-		pringHelp()
+		printHelp()
 		return
 	}
 
@@ -158,11 +158,11 @@ func main() {
 		id, _ := strconv.Atoi(os.Args[2])
 		deleteTodo(id)
 	default:
-		pringHelp()
+		printHelp()
 	}
 }
 
-func pringHelp() {
+func printHelp() {
 	fmt.Println("todo 使用说明:")
 	fmt.Println("  add <任务名>   - 添加任务")
 	fmt.Println("  list          - 列出所有任务")
