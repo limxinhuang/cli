@@ -7,7 +7,7 @@ import (
 )
 
 // 数据文件
-const dbFile = "todos.json"
+const dbFile = ".todo/todos.json"
 
 func getDbFile() string {
 	home, _ := os.UserHomeDir()
