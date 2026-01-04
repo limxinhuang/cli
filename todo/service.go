@@ -2,9 +2,10 @@ package todo
 
 import (
 	"fmt"
-	"os"
-	"text/tabwriter"
+	"strconv"
 	"time"
+
+	utils "github.com/limxinhuang/cli/pkg/utlis"
 )
 
 const timeFormat = "2006-01-02 15:04:05"
@@ -27,18 +28,29 @@ func Add(title string) {
 func List() {
 	todos, _ := loadTodos()
 
-	w := tabwriter.NewWriter(os.Stdout, 0, 0, 3, ' ', 0)
-	fmt.Fprintln(w, "ID\t任务\t状态\t创建时间\t完成时间")
-	fmt.Fprintln(w, "")
+	table := utils.NewTableWriterDefault([]string{"ID", "任务", "状态", "创建时间", "完成时间"})
 
 	for _, t := range todos {
+		status := "\033[32mX\033[0m"
+		id := strconv.Itoa(t.ID)
+		completedAt := "-"
 		if t.Completed {
-			fmt.Fprintf(w, "%d\t%s\t\033[32m%s\033[0m\t%s\t%s\n", t.ID, t.Title, "V", t.CreatedAt.Format(timeFormat), t.CompletedAt.Format(timeFormat))
-		} else {
-			fmt.Fprintf(w, "%d\t%s\t\033[31m%s\033[0m\t%s\n", t.ID, t.Title, "X", t.CreatedAt.Format(timeFormat))
+			status = "\033[31m%s\033[0m"
+			completedAt = t.CompletedAt.Format(timeFormat)
 		}
+
+		row := []string{
+			id,
+			t.Title,
+			status,
+			t.CreatedAt.Format(timeFormat),
+			completedAt,
+		}
+
+		table.Append(row)
 	}
-	w.Flush()
+
+	table.Render()
 }
 
 func Completed(id int) {
